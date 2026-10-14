@@ -1,0 +1,6 @@
+node_modules/
+
+# Your real hours live here. They stay on your computer, not on GitHub.
+data/
+
+.DS_Store

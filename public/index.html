@@ -1,0 +1,135 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Time Clock</title>
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <header class="topbar">
+      <div class="topbar-inner">
+        <a class="brand" href="#clock">
+          <svg viewBox="0 0 16 16" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <circle cx="8" cy="8" r="6" />
+            <path d="M8 4.5V8l2.5 1.5" />
+          </svg>
+          Time Clock
+        </a>
+
+        <nav class="tabs" aria-label="Sections">
+          <a href="#clock" data-tab="clock">Clock</a>
+          <a href="#log" data-tab="log">Log</a>
+          <a href="#reports" data-tab="reports">Reports</a>
+          <a href="#projects" data-tab="projects">Projects</a>
+        </nav>
+
+        <!-- Shown on the other tabs while the clock is running. -->
+        <a class="running-pill" id="running-pill" href="#clock" title="Go to the clock" hidden>
+          <span class="dot"></span>
+          <span id="running-pill-name"></span>
+          <span class="running-pill-time" data-live="clock" data-base="0"></span>
+        </a>
+      </div>
+    </header>
+
+    <!-- app.js draws the current tab in here. -->
+    <main class="shell" id="view"></main>
+
+    <footer class="shell footer">
+      <label class="inline-field">
+        <span>Week starts on</span>
+        <select id="week-start" data-action="week-start">
+          <option value="1">Monday</option>
+          <option value="0">Sunday</option>
+        </select>
+      </label>
+    </footer>
+
+    <!-- Add or edit an entry -->
+    <dialog id="entry-dialog" aria-labelledby="entry-title">
+      <form id="entry-form">
+        <h2 id="entry-title">Add entry</h2>
+
+        <label class="field">
+          <span>Project</span>
+          <select name="projectId" required></select>
+        </label>
+
+        <div class="field-pair">
+          <label class="field">
+            <span>Start</span>
+            <input type="datetime-local" name="start" required />
+          </label>
+          <label class="field">
+            <span>End</span>
+            <input type="datetime-local" name="end" />
+          </label>
+        </div>
+        <p class="field-hint" id="entry-preview" aria-live="polite"></p>
+
+        <label class="field">
+          <span>Note <em>(optional)</em></span>
+          <input type="text" name="note" maxlength="500" autocomplete="off" placeholder="What did you work on?" />
+        </label>
+
+        <p class="form-error" role="alert" hidden></p>
+
+        <div class="dialog-actions">
+          <button type="button" class="btn" data-close>Cancel</button>
+          <button type="submit" class="btn btn-primary">Save</button>
+        </div>
+      </form>
+    </dialog>
+
+    <!-- Add or edit a project -->
+    <dialog id="project-dialog" aria-labelledby="project-title">
+      <form id="project-form">
+        <h2 id="project-title">New project</h2>
+
+        <label class="field">
+          <span>Name</span>
+          <input type="text" name="name" required maxlength="60" autocomplete="off" placeholder="e.g. eBay store" autofocus />
+        </label>
+
+        <fieldset class="field">
+          <legend>Color</legend>
+          <div class="swatches" id="project-swatches"></div>
+        </fieldset>
+
+        <label class="field">
+          <span>Hourly rate <em>(optional, to see what your time is worth)</em></span>
+          <span class="money-input">
+            <span aria-hidden="true">$</span>
+            <input type="number" name="rate" min="0" max="1000000" step="0.01" inputmode="decimal" placeholder="0.00" />
+          </span>
+        </label>
+
+        <p class="form-error" role="alert" hidden></p>
+
+        <div class="dialog-actions">
+          <button type="button" class="btn" data-close>Cancel</button>
+          <button type="submit" class="btn btn-primary">Save</button>
+        </div>
+      </form>
+    </dialog>
+
+    <!-- Are you sure? -->
+    <dialog id="confirm-dialog" aria-labelledby="confirm-title" aria-describedby="confirm-message">
+      <form>
+        <h2 id="confirm-title"></h2>
+        <p id="confirm-message"></p>
+        <p class="form-error" role="alert" hidden></p>
+        <div class="dialog-actions">
+          <button type="button" class="btn" data-close autofocus>Cancel</button>
+          <button type="submit" class="btn btn-stop" id="confirm-button"></button>
+        </div>
+      </form>
+    </dialog>
+
+    <div class="toasts" id="toasts" role="status" aria-live="polite"></div>
+
+    <script type="module" src="/js/app.js"></script>
+  </body>
+</html>
